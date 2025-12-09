@@ -31,3 +31,37 @@ jenkins/jenkins:lts
     docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
     http://localhost:8080 y metes la pass
     instalas los pluggins por defecto
+
+configurar acceso a docker dentro del jenkins container
+    docker rm -f jenkins
+
+docker run -d \
+--name jenkins \
+-p 8080:8080 -p 50000:50000 \
+-v jenkins_home:/var/jenkins_home \
+-v /var/run/docker.sock:/var/run/docker.sock \
+jenkins/jenkins:lts
+
+CI
+sudo snap install kubectl --classic (k8s en docker)
+k3d cluster create demo2 --api-port 6552 -p "8085:80@loadbalancer" (crear cluster)
+kubectl get nodes (verificar)
+NAME                 STATUS   ROLES                  AGE   VERSION
+k3d-demo3-server-0   Ready    control-plane,master   23s   v1.31.5+k3s1
+
+crear /k8s 
+    - deployment.yaml
+    - service.yaml
+
+Credencial jenkins
+Jenkins
+Administrar Jenkins
+Credentials
+System
+Global credentials (unrestricted)
+    Tipo: Username with password
+    Username: admin
+    Password: tu contraseña de Nexus
+    ID: nexus-creds
+
+pipeline jenkins
