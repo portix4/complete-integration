@@ -64,4 +64,12 @@ Global credentials (unrestricted)
     Password: tu contraseña de Nexus
     ID: nexus-creds
 
-pipeline jenkins
+pipeline en jenkins
+Tipo: Pipeline
+Repo: https://github.com/portix4/complete-integration.git
+Pipeline script from SCM → Branch: main
+Script Path: Jenkinsfile (lo crearemos en el siguiente paso)
+
+crear Jenkinsfile
+
+Guardar todo en el repo u ejecutar jenkins
