@@ -56,6 +56,9 @@ Repository URL: https://github.com/portix4/complete-integration.git
 Branch: main
 Credentials: deja vacío si es público
 
+
+b9a243fe68724c86bbe67f91a1307df5
+
 CI
 sudo snap install kubectl --classic (k8s en docker)
 k3d cluster create demo2 --api-port 6552 -p "8085:80@loadbalancer" (crear cluster)
