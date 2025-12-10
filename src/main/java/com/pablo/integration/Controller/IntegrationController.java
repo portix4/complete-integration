@@ -1,5 +1,6 @@
 package com.pablo.integration.Controller;
 
+import com.pablo.integration.Model.Objeto;
 import com.pablo.integration.Service.IntegrationService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,7 +15,7 @@ public class IntegrationController {
     }
 
     @PostMapping("/integration")
-    public String integrationController(){
+    public Objeto integrationController(){
         return service.integrationService();
     }
 }

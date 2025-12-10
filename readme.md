@@ -1,46 +1,60 @@
-/mnt/c/Users/porti/Desktop/Projects/Practice/integration
+Una vez que tenemos el micro funcionando
+1) 
+Crear imagen
+te vas a tu proyecto ->/mnt/c/Users/porti/Desktop/Projects/Practice/integration
+docker build -t integration:1.0 .
+
+Correr contenedor 
 docker run -p 8080:8080 pablo/integration:1.0
-nexus
-    docker run -d -p 8081:8081 --name nexus sonatype/nexus3
-    http://localhost:8081
-    docker exec nexus cat /nexus-data/admin.password
-    -> http://localhost:8081 admin/ y la pass de arriba
-    te creas un repo en nexus
+
+
+2) Levantar  Nexus (Docker)
+docker run -d -p 8081:8081 -p 8083:8083 --name nexus \ -v nexus-data:/nexus-data \ sonatype/nexus3
+esperamos un poco
+docker exec nexus cat /nexus-data/admin.password
+http://localhost:8081 : admin/pass anterior
+Te creas un repositorio: settings/create repository
+
 | Campo           | Valor                        |
 | --------------- | ---------------------------- |
 | Name            | docker-hosted                |
 | HTTP Port       | **8083** (o cualquier libre) |
 | Allow anonymous | ❌ NO                         |
-    docker ps: ver que tienes levantado el 8083
-    docker login localhost:8083
-        admin/pass que has reiniciado
-        "Login succeeded"
 
-    push del micro
-        docker tag pablo/integration:1.0 localhost:8083/integration:1.0 (etiquetar la imagen)
-        docker push localhost:8083/integration:1.0 (subirla al registry)
+docker login localhost:8083
+admin/pass que has reiniciado
+"Login succeeded"
 
-    
-JENKINS
-docker run -d \
---name jenkins \
--p 8080:8080 -p 50000:50000 \
--v jenkins_home:/var/jenkins_home \
-jenkins/jenkins:lts
+tag de la imagen para apuntar al repositorio: docker tag pablo/integration:1.0 localhost:8083/integration:1.0 (etiquetar la imagen)
+push: docker push localhost:8083/integration:1.0 (subirla al registry)
 
-    docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
-    http://localhost:8080 y metes la pass
-    instalas los pluggins por defecto
+3) JENKINS
+   docker run -d -p 8080:8080 -p 50000:50000 --name jenkins \
+   -v jenkins_home:/var/jenkins_home \
+   jenkins/jenkins:lts
+docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+http://localhost:8080 y metes la pass
+instalas los pluggins por defecto
 
-configurar acceso a docker dentro del jenkins container
-    docker rm -f jenkins
+settings y añadimos mvn
 
-docker run -d \
---name jenkins \
--p 8080:8080 -p 50000:50000 \
+configurar acceso a docker dentro del jenkins container: docker build y docker push
+docker stop jenkins
+docker rm jenkins
+docker run -d -p 8080:8080 -p 50000:50000 --name jenkins \
 -v jenkins_home:/var/jenkins_home \
 -v /var/run/docker.sock:/var/run/docker.sock \
 jenkins/jenkins:lts
+
+Pipeline
+En Jenkins, ve a “New Item” → ponle un nombre, por ejemplo integracion-completa.
+Selecciona Pipeline → clic en OK.
+En la sección Pipeline:
+Definition: Pipeline script from SCM
+SCM: Git
+Repository URL: https://github.com/portix4/complete-integration.git
+Branch: main
+Credentials: deja vacío si es público
 
 CI
 sudo snap install kubectl --classic (k8s en docker)
